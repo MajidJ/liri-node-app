@@ -4,7 +4,13 @@
   "description": "",
   "main": "twitter.js",
   "dependencies": {
-    "npm": "^5.8.0"
+    "dotenv": "^5.0.1",
+    "fs": "0.0.1-security",
+    "node-spotify-api": "^1.0.7",
+    "npm": "^5.8.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.7.1",
+    "twitter-rest-api": "^0.1.0"
   },
   "devDependencies": {},
   "scripts": {
