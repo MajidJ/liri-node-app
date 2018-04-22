@@ -10,9 +10,12 @@ const spotify = new Spotify(keys.spotify);
 const client = new Twitter(keys.twitter);
 const input = process.argv[2];
 const input2 = process.argv[3];
-const tweetCount = 10;
+const tweetCount = 20;
 
+
+// Displays the last 10 tweets of the authorized user
 const getTweets = function() {
+
     client.get('statuses/user_timeline', {count: `${tweetCount}`}, function(error, tweets, response) {
         if (!error) {
             tweets.forEach(info => {
@@ -24,18 +27,36 @@ const getTweets = function() {
         }
     });
 }
+// End of getTweets function
 
+// Get song info by searching a song title input
 const getSongInfo = function(songName) {
-
+     
+    spotify.search({ type: 'track', query: `${input2}` }, function(error, data) {
+      if (!error) {
+        console.log('Artist(s) name: ' + data.tracks.items[0].artists[0].name);
+        console.log('Song name: ' + data.tracks.items[0].name);
+        console.log('Preview link: ' + data.tracks.items[0].external_urls.spotify);
+        console.log('Album: ' + data.tracks.items[0].album.name);
+      } else {
+        return console.log('Error occurred: ' + err);
+      }
+    });
 }
+// End of getSongInfo function
+
 
 const getMovieInfo = function(movieName) {
 
 }
+// End of getMovieInfo function
+
 
 const followCommands = function(commands) {
 
 }
+// End of followCommands function
+
 
 
 switch (input) {
