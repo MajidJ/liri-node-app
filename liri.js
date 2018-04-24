@@ -14,6 +14,8 @@ let input = process.argv[2];
 let input2 = process.argv[3];
 const tweetCount = 20;
 let songSearch;
+let movieSearch;
+let rottenScore;
 
 // Displays the last 10 tweets of the authorized user
 const getTweets = function() {
@@ -21,8 +23,11 @@ const getTweets = function() {
     client.get('statuses/user_timeline', {count: `${tweetCount}`}, function(err, tweets, response) {
         if (!err) {
             tweets.forEach(info => {
-                console.log('Tweet: ' + info.text);
-                console.log('Date posted: ' + info.created_at);
+                console.log(`\n\nTweet: ${info.text} \nDate Posted: ${info.created_at}`);
+                fs.appendFile('log.txt', `\n\nTweet: ${info.text} \nDate Posted: ${info.created_at}`, (err) => {
+                    if (err) throw err;
+                    console.log('\nThe data was appended to log.txt file!');
+                });
             })
         } else {
             console.log('Error occurred: ' + err);
@@ -41,10 +46,11 @@ const getSongInfo = function(songName) {
     }
     spotify.search({ type: 'track', query: `${songSearch}` }, function(err, data) {
         if (!err) {
-            console.log('Artist(s) name: ' + data.tracks.items[0].artists[0].name);
-            console.log('Song name: ' + data.tracks.items[0].name);
-            console.log('Preview link: ' + data.tracks.items[0].external_urls.spotify);
-            console.log('Album: ' + data.tracks.items[0].album.name);
+            console.log(`\n\nArtist(s) name: ${data.tracks.items[0].artists[0].name} \nSong name: ${data.tracks.items[0].name} \nPreview link: ${data.tracks.items[0].external_urls.spotify} \nAlbum: ${data.tracks.items[0].album.name}`);
+            fs.appendFile('log.txt', `\n\nArtist(s) name: ${data.tracks.items[0].artists[0].name} \nSong name: ${data.tracks.items[0].name} \nPreview link: ${data.tracks.items[0].external_urls.spotify} \nAlbum: ${data.tracks.items[0].album.name}`, (err) => {
+                if (err) throw err;
+                console.log('\nThe data was appended to log.txt file!');
+            });
         } else {
             return console.log('Error occurred: ' + err);
         }
@@ -55,21 +61,24 @@ const getSongInfo = function(songName) {
 // Displays movie info by searching a movie title
 const getMovieInfo = function(movieName) {
     
-    request('http://www.omdbapi.com/?t=' + movieName + '&apikey=' + omdbAPIKey, function (err, response, body) {
+    if (movieName) {
+        movieSearch = movieName;
+    } else {
+        movieSearch = 'Mr Nobody';
+    }
+    request('http://www.omdbapi.com/?t=' + movieSearch + '&apikey=' + omdbAPIKey, function (err, response, body) {
         if (!err) {
             let movieInfo = JSON.parse(body);
-            console.log('Title: ', movieInfo.Title);
-            console.log('Year: ', movieInfo.Year);
-            console.log('IMDB Rating: ', movieInfo.imdbRating);
             movieInfo.Ratings.forEach(function(sources) {
                 if (sources.Source === "Rotten Tomatoes") {
-                    console.log('Rotten Tomatoes Rating: ', sources.Value);
+                    rottenScore = sources.Value;
                 } 
             })
-            console.log('Country produced in: ', movieInfo.Country);
-            console.log('Language: ', movieInfo.Language);
-            console.log('Plot: ', movieInfo.Plot);
-            console.log('Actors: ', movieInfo.Actors);
+            console.log(`\n\nTitle: ${movieInfo.Title} \nYear: ${movieInfo.Year} \nIMDB Rating: ${movieInfo.imdbRating} \nRotten Tomatoes: ${rottenScore} \nCountry produced in: ${movieInfo.Country} \nLanguage: ${movieInfo.Language} \nPlot: ${movieInfo.Plot} \nActors: ${movieInfo.Actors}`);
+            fs.appendFile('log.txt', `\n\nTitle: ${movieInfo.Title} \nYear: ${movieInfo.Year} \nIMDB Rating: ${movieInfo.imdbRating} \nRotten Tomatoes: ${rottenScore} \nCountry produced in: ${movieInfo.Country} \nLanguage: ${movieInfo.Language} \nPlot: ${movieInfo.Plot} \nActors: ${movieInfo.Actors}`, (err) => {
+                if (err) throw err;
+                console.log('\nThe data was appended to log.txt file!');
+            });
         } else {
             return console.log('Error occurred: ' + err);
         }
