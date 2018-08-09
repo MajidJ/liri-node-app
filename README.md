@@ -29,7 +29,7 @@ Note:
 
 ## Authors
 
-* **Majid Jamaleldine** - [Taxlife](https://github.com/taxlife)
+* **Majid Jamaleldine** - [MajidJ](https://github.com/MajidJ)
 
 ## License
 
